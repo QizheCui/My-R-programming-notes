@@ -1,0 +1,48 @@
+---
+title: "Swirl"
+author: "Qizhe Cui"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+we can use **identical(a,b)** funciton to compare if two objects are the same  
+
+
+If we want to assign a dataframe with column name then we use **colnames(my_data)<-cnames**
+where cnames is a concatenation of names
+
+If we want to know all the objects in my workspace, sue **ls()**. If we want to know all the files in my working directory, use **dir()**  
+we can also create a directory in the current working directory by **dir.create()** and we can use **list.files()**to check all the files in our working directory, then we can use **file.create()** to create a file. If we want to rename a file, we can use **file.rename(from, to)**. In order to know the path of a file, we use **file.path()**.
+
+
+# Sequence
+
+We can use the function **seq(1,20,0.5)** for all number from 1 to 20 with interval 0.5 and we can use **seq(1,20,length=20)** for 20 number equally distributed from 1 to 20. If we want to replicate a number for 40 times, then we use **rep(0, times = 40)**. This also applies to vector and examples are **rep(c(1,2,3), times = 20)** or we want each number to repeat several times.
+```{r}
+a<-rep(c(1,3,5),times=10)
+b<-rep(c(1,2,3), each =10)
+
+a
+b
+
+```
+
+# Subsetting 
+
+In order to apply more than one condicition on a dataframe/list, we use the symbol &
+
+```{r}
+x <- list(NA,0.32,NA,-2.12,2.3,1.23,NA)
+a<-x[is.na(x) & x>0]
+a
+```
+If we want to omit specific element of a list we can use miuns sign
+```{r}
+x <- rnorm(20)
+x[c(-2:-10)]#This omits the 2nd to 10st elements 
+x [-c(3,4,6)]#We can put the minus sign in front
+```
+
+if we want to remove all the variales in rstudio we first use  **rm(list=ls())** where **ls()** give us all the variables in the rstudio.

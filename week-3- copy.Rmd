@@ -1,0 +1,76 @@
+---
+title: "Week 3"
+output: html_notebook
+---
+
+# lappy function
+
+
+lappy function makes huge use of anonymous funcitons
+```{r}
+x<-list(a=matrix(1:4,2,2), b=matrix(1:6,3,2))
+lapply(x, function(elt) elt[,1]) #This function doesn't exist expect in lappy
+
+
+x<-list(a=1:5, b=rnorm(4))
+lapply(x, mean)
+
+```
+
+Besides lapply, **sapply** try to simplify the result of lapply function. For example, if the result is a list with each element of length 1, then a vector is returned. If the result is a list with each vector of the same length, then a matrix is returned.
+```{r}
+x<-list(a=1:4,b=2:5)
+sapply(x, print)
+sapply(x,mean)
+```
+# apply function
+
+apply function can evaluate function over the margin of an array. There are also many shortcuts, ad for matrix, 1 means rows and 2 means columns
+```{r}
+x<-matrix(rnorm(200),20,10)
+apply(x, 1, mean)
+apply(x,2,mean)
+apply(x, 1, sum)
+apply(x, 2, sum)
+```
+
+So now we got four shortcuts that are helpful to matrix calculation**rowSums=apply(x,1,sum) rowMeans=apply(x,1,mean) colSums=apply(x,2,sum) colMeans= apply(x,2,means)**
+
+# mapply
+For a function with multiple variables and we want to execute each variables for several times, we can use mapply function.
+```{r}
+mapply(rnorm,3:6,0:3,1:4) 
+```
+This is equivalent to rnorm(3,0,1), rnorm(4,1,2), rnorm(5,2,3), rnorm(6,3,4)
+
+# tapply
+tapply can split a vector into different groups normally based on degrees or other personalized categories. Normally we need to use the **gl()** function to create the degree
+```{r}
+x<-rnorm(30)
+tapply(x, gl(3,10), mean)
+tapply(x,gl(3,10), summary)
+```
+
+# split 
+
+Split function is the version of tapply without applying function to each group of data. So we normally use split function in conjunction with lapply/sapply. The reason we choose this instead of tapply is that lapply/sapply can personalize a function but tapply cannot.
+```{r}
+dataframes<-read.csv("hw1_data.csv")
+a<-split(dataframes,dataframes$Month)
+a
+sapply(a, function(x) colMeans(x[,c("Ozone","Solar.R","Wind")],na.rm = TRUE))
+```
+
+If we have multiple categories, we can use the interaction function, and in split function we can just use **list( )** instead of interaction funciton. In order to omit the empty levels, we use **drop = TRUE**.
+```{r}
+x<-rnorm(20,1,2)
+f1<-gl(5,2)
+f2<-gl(2,5)
+interaction(f1,f2)
+split(x,list(f1,f2))
+split(x,list(f1,f2),drop = TRUE)
+```
+
+# Debug function
+
+The **traceback** function can be used to traceback the error and see how deep the execution goes.Other functions include **debug browser trace recover**. 
