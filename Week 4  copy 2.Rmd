@@ -1,0 +1,129 @@
+---
+title: "Week 4"
+output:
+  html_document:
+    df_print: paged
+---
+# The str function
+
+It displays compactly the contents of a R obejct (Note that function is also a R obejct). Str can give you a quick examination
+```{r}
+str(list(1,2,x="3",TRUE))
+library(datasets)
+l<-airquality
+str(head(l)) #The structure of the first 6 rows of l
+
+m<-matrix(rnorm(24),3,8)
+str(m)
+
+str(split(l,l$Month)) #The structure of the list which is based on different months of the airquality
+```
+
+# Simulation for statistics
+
+**rnorm** function can simulate a normal distribution with given mean and SD. Probability generating function have four functions asscociated with them, which are **d for density, r for random number generation, p for cumulative distribution, and q for quantile function**  If we want to reproduce the random number that we generate then we use **set.seed( )** function.
+
+```{r}
+set.seed(1)
+rnorm(10)
+set.seed(2)
+rnorm(10)
+set.seed(1)
+rnorm(10)
+set.seed(2)
+rnorm(10)
+```
+Note that d,r,p,q are prefix for any distribution types such as poisson, bionomial, geometric. The p and q are reverse and p represent the total area under the graph whereas q is the corresponding value. 
+```{r}
+rpois(10,5) 
+ppois(7,3)  #return the culmulative area at the first 7 trails when the mean is 3, 
+qpois(0.98,3) #return the number you need to get a 98% culmulative area
+dbinom(3,6,0.5) #return the probability of getting a 3  when the total is 6 and probability is 0.5
+
+```
+
+#Generating random number from a generalised linear model
+
+Suppose that we have a relationship between y and x and we want to simulate the result of y, then we can plot the graph and visulize their relationship.
+```{r}
+set.seed(1)
+x<-rnorm(100)
+e<-rnorm(100,1,2)
+y<- 2+ 0.5 * x +e
+summary(y)
+plot(x,y)
+```
+```{r}
+# If we want to create a binary distribution which is in fact a binomial distribution then we can
+
+x<-rbinom(100,1,0.5)
+y<-2 + 0.5 *x +e
+summary(y)
+plot(x,y)
+
+# if we want some complciated relationship involving log function. We can suppose y ~ Po(mu)
+
+x<-rnorm(100)
+log.mu<-2+0.5 * x
+y<-rpois(100,exp(log.mu))
+summary(y)
+plot(x,y)
+
+
+
+
+
+```
+
+
+# Random sampling 
+
+we use the **sample** function to draw randomly from a specific set of scalar R objects such as number and letters. If we don't specify the trails, then it will return a permutation of the set of number.
+```{r}
+sample(2:12)
+sample(2:12,replace = TRUE) #replace= TRUE means that they can repeat 
+sample(1:10,5)
+sample(letters,3)
+sample(c(0,1,2),100,replace=TRUE,prob = c(0.2,0.3,0.5))
+```
+
+
+# R Profiler system.time() R分析器
+
+The function **system.time( )** can return the amount of time taken to evaluate the expression. The class of the returned object is **proc_time**. The **user time** is the time that CPU takes for this expression, the **elapsed time** is the time that I experience. Instances of elapsed time > user time includes reading from a web page because the computer wait for the network rather than running the program itself. 
+```{r}
+system.time({
+  n<-1000
+  r<-numeric(n) #Note that numeric(n) create a vector of 0 of length n
+  for (i in 1:n){
+    x<-rnorm(n)
+    r[i]<-mean(x)
+  }
+})
+system.time(readLines("https://dictionary.cambridge.org/"))  
+```
+
+
+# R Profiler Rprof(), summaryRprof
+Rprof() function takes a default interval of 0.02 seconds. It repeats if running the program takes over 0.02 second. We use the **summaryRrof()** function to tabulate the outputs of R profiler. There are two methods for normalizing the data, "by.total" and "by.self". **by.total** calculates the time spent both in top levels and low levels function whereas **by.self** only calculates the time spent in the top levels function
+
+
+#Swirl-looking at data
+
+If we want to know how much space a R object(such as dataframe) takes we can use the function **object.size()**, and **names()** will return the names of the columns in the dataframe. Also the **str()** helps us to understand the structure of a R object
+
+#Swirl simulation
+
+If we want to replicate a distribution n times then we can use the replicate function **replicate() ** , which creates a matrix with each columns representing the single group result. If we want to know the mean of each groups , we can use **colMeans()**.
+```{r}
+a<-replicate(100,rpois(5,10))
+cm<-colMeans(a)
+hist(a) #The histogram looks like a normal distribution because of the central limit theorem 
+
+```
+
+# Swirl basic graphics
+plot function has many arguments such as **main, sub, xlim,ylim, xlab,ylab**. For more plz type ?plot.  We can also use **boxplot()** to plot graph simply use xx ~ xx with data = xx. The function **hist()** can plot a single variable 
+```{r}
+boxplot(mpg~cyl,data = mtcars)
+```
